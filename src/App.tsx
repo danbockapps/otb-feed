@@ -49,6 +49,7 @@ const reducer = (state: IEvent[], action: Action) => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, [])
+  console.log({ state })
 
   useEffect(() => {
     new URLSearchParams(window.location.search)

@@ -1,4 +1,13 @@
-import { Link, Paper, Typography } from '@mui/material'
+import {
+  Link,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import { FC } from 'react'
 import { IEvent } from './App'
 import './event.scss'
@@ -8,43 +17,56 @@ interface Props {
 }
 
 const Event: FC<Props> = props => {
-  const { event } = props
+  const regExists = props.event.performances.some(p => p.reg !== '&nbsp;')
+  const quickExists = props.event.performances.some(p => p.quick !== '&nbsp;')
+  const blitzExists = props.event.performances.some(p => p.blitz !== '&nbsp;')
+
   return (
     <Paper className='event'>
       <Typography variant='body2' className='date'>
-        {event.info.date}
+        {props.event.info.date}
       </Typography>
       <Typography variant='h6'>
-        {listNames(event.performances.map(p => p.name))} attended{' '}
+        {listNames(props.event.performances.map(p => p.name))} attended{' '}
         <Link
           underline='hover'
-          href={`https://www.uschess.org/msa/XtblMain.php?${event.info.id}.0`}
+          href={`https://www.uschess.org/msa/XtblMain.php?${props.event.info.id
+            .replace('**', '')
+            .trim()}.0`}
           target='_blank'
-          dangerouslySetInnerHTML={{ __html: event.info.name }}
+          dangerouslySetInnerHTML={{ __html: props.event.info.name }}
         />
       </Typography>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Section</th>
-            <th>Reg</th>
-            <th>Quick</th>
-            <th>Blitz</th>
-          </tr>
-        </thead>
-        <tbody>
-          {event.performances.map((p, i) => (
-            <tr key={i}>
-              <td>{p.name}</td>
-              <td>{p.section}</td>
-              <td dangerouslySetInnerHTML={{ __html: p.reg }} />
-              <td dangerouslySetInnerHTML={{ __html: p.quick }} />
-              <td dangerouslySetInnerHTML={{ __html: p.blitz }} />
-            </tr>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            {regExists && <TableCell align='center'>Reg</TableCell>}
+            {quickExists && <TableCell align='center'>Quick</TableCell>}
+            {blitzExists && <TableCell align='center'>Blitz</TableCell>}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {props.event.performances.map((p, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                {p.name}
+                <br />
+                <Typography variant='caption'>{p.section}</Typography>
+              </TableCell>
+              {regExists && (
+                <TableCell align='center' dangerouslySetInnerHTML={{ __html: p.reg }} />
+              )}
+              {quickExists && (
+                <TableCell align='center' dangerouslySetInnerHTML={{ __html: p.quick }} />
+              )}
+              {blitzExists && (
+                <TableCell align='center' dangerouslySetInnerHTML={{ __html: p.blitz }} />
+              )}
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </Paper>
   )
 }
