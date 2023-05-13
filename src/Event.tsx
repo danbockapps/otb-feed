@@ -1,7 +1,7 @@
 import { Paper, Typography } from '@mui/material'
 import { FC } from 'react'
 import { IEvent } from './App'
-import './event.css'
+import './event.scss'
 
 interface Props {
   event: IEvent

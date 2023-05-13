@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react'
-import './App.css'
+import './App.scss'
 import Event from './Event'
 
 export interface Performance {
