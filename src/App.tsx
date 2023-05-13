@@ -1,7 +1,8 @@
 import { useEffect, useReducer } from 'react'
 import './App.css'
+import Event from './Event'
 
-interface Performance {
+export interface Performance {
   name: string
   section: string
   reg: string
@@ -9,23 +10,23 @@ interface Performance {
   blitz: string
 }
 
-interface EventInfo {
+export interface EventInfo {
   date: string
   id: string
   name: string
 }
 
-interface Event {
+export interface IEvent {
   info: EventInfo
   performances: Performance[]
 }
 
 interface Action {
   type: 'ADD_PERFORMANCES'
-  payload: Event[]
+  payload: IEvent[]
 }
 
-const reducer = (state: Event[], action: Action) => {
+const reducer = (state: IEvent[], action: Action) => {
   switch (action.type) {
     case 'ADD_PERFORMANCES':
       const set = new Set(state.map(s => s.info.id))
@@ -59,9 +60,8 @@ function App() {
           const doc = parser.parseFromString(t, 'text/html')
           const tables = doc.getElementsByTagName('table')
           const idAndName = tables[3].getElementsByTagName('b')[0].innerText
-          const [_id, name] = idAndName.split(':').map(s => toUpperCamelCase(s.trim()))
 
-          const events: Event[] = Array.from(tables[6].getElementsByTagName('tr'))
+          const events: IEvent[] = Array.from(tables[6].getElementsByTagName('tr'))
             .slice(2)
             .map(tr => {
               const [dateAndId, eventAndSection, reg, quick, blitz] = Array.from(
@@ -79,7 +79,7 @@ function App() {
                 },
                 performances: [
                   {
-                    name,
+                    name: toUpperCamelCase(idAndName.split(':')[1].trim()),
                     section: getSmallText(eventAndSection.innerHTML),
                     reg: reg.innerHTML,
                     quick: quick.innerHTML,
@@ -101,9 +101,7 @@ function App() {
       {state
         .sort((a, b) => (a.info.date > b.info.date ? -1 : 1))
         .map((event, i) => (
-          <div key={i} style={{ marginTop: '1em' }}>
-            {JSON.stringify(event)}
-          </div>
+          <Event key={i} event={event} />
         ))}
     </div>
   )
