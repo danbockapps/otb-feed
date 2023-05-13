@@ -1,4 +1,4 @@
-import { Paper, Typography } from '@mui/material'
+import { Link, Paper, Typography } from '@mui/material'
 import { FC } from 'react'
 import { IEvent } from './App'
 import './event.scss'
@@ -15,7 +15,13 @@ const Event: FC<Props> = props => {
         {event.info.date}
       </Typography>
       <Typography variant='h6'>
-        {listNames(event.performances.map(p => p.name))} attended {event.info.name}
+        {listNames(event.performances.map(p => p.name))} attended{' '}
+        <Link
+          underline='hover'
+          href={`https://www.uschess.org/msa/XtblMain.php?${event.info.id}.0`}
+          target='_blank'
+          dangerouslySetInnerHTML={{ __html: event.info.name }}
+        />
       </Typography>
       <table>
         <thead>
