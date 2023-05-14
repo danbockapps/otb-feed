@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react'
 import './App.scss'
 import Event from './Event'
 import PlayerList, { Player } from './PlayerList'
+import { Typography } from '@mui/material'
 
 export interface Performance {
   name: string
@@ -133,7 +134,16 @@ function App() {
 
   return (
     <div className='App'>
+      <Typography className='title' variant='h6'>
+        ♟ OTB Feed ♟
+      </Typography>
+      <Typography className='subhed' variant='body2'>
+        Edit URL to add/remove players.
+        <br />
+        Now showing USCF events for:
+      </Typography>
       <PlayerList players={state.players} />
+
       {state.events
         .sort((a, b) => (a.info.date > b.info.date ? -1 : 1))
         .map((event, i) => (

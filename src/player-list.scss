@@ -1,0 +1,10 @@
+.player-list {
+  height: 5.7em;
+  overflow-y: scroll;
+  margin: 1em;
+  border-bottom: 1px solid #ccc;
+
+  .player-chip {
+    margin: 0.1em;
+  }
+}

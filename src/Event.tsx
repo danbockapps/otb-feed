@@ -27,7 +27,7 @@ const Event: FC<Props> = props => {
         {props.event.info.date}
       </Typography>
       <Typography variant='h6'>
-        {listNames(props.event.performances.map(p => p.name))} attended{' '}
+        {listNames(props.event.performances.map(p => p.name))} played in{' '}
         <Link
           underline='hover'
           href={`https://www.uschess.org/msa/XtblMain.php?${props.event.info.id

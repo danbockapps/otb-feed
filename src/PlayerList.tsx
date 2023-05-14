@@ -1,5 +1,6 @@
-import { Typography } from '@mui/material'
+import { Chip } from '@mui/material'
 import { FC } from 'react'
+import './player-list.scss'
 
 export interface Player {
   name: string
@@ -12,13 +13,11 @@ interface Props {
 
 const PlayerList: FC<Props> = props => {
   return (
-    <>
+    <div className='player-list'>
       {props.players.map((p, i) => (
-        <Typography key={i}>
-          {p.id} {p.name}
-        </Typography>
+        <Chip className='player-chip' size='small' label={`${p.id} ${p.name}`} key={i} />
       ))}
-    </>
+    </div>
   )
 }
 

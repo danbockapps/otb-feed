@@ -1,4 +1,9 @@
 .App {
   background-color: beige;
-  padding-top: 3em;
+  padding-top: 0.5em;
+
+  .title,
+  .subhed {
+    text-align: center;
+  }
 }
