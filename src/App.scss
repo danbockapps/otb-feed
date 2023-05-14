@@ -2,6 +2,11 @@
   background-color: beige;
   padding-top: 0.5em;
 
+  @media (min-width: 1000px) {
+    padding-left: 15em;
+    padding-right: 15em;
+  }
+
   .title,
   .subhed {
     text-align: center;
