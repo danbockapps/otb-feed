@@ -72,15 +72,16 @@ const Event: FC<Props> = props => {
 }
 
 const listNames = (names: string[]) => {
-  switch (names.length) {
+  const deduped = Array.from(new Set(names))
+  switch (deduped.length) {
     case 1:
-      return names[0]
+      return deduped[0]
     case 2:
-      return `${names[0]} and ${names[1]}`
+      return `${deduped[0]} and ${deduped[1]}`
     case 3:
-      return `${names.slice(0, -1).join(', ')}, and ${names.slice(-1)}`
+      return `${deduped.slice(0, -1).join(', ')}, and ${deduped.slice(-1)}`
     default:
-      return `${names.length} players`
+      return `${deduped.length} players`
   }
 }
 

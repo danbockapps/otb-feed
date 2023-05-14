@@ -39,13 +39,30 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         events: [
           ...state.events.map(s => {
-            const event = action.payload.find(
+            const events = action.payload.filter(
               e =>
                 e.info.id === s.info.id &&
-                !s.performances.some(ss => ss.name === e.performances[0].name),
-            ) ?? { performances: [] }
-            return { ...s, performances: [...s.performances, ...event.performances] }
+                !s.performances.some(
+                  ss =>
+                    ss.name === e.performances[0].name && ss.section === e.performances[0].section,
+                ),
+            )
+            return {
+              ...s,
+              performances: [...s.performances, ...events.flatMap(e => e.performances)].sort(
+                (a, b) =>
+                  a.section === b.section
+                    ? a.name > b.name
+                      ? 1
+                      : -1
+                    : a.section > b.section
+                    ? 1
+                    : -1,
+              ),
+            }
           }),
+
+          // Events that are not yet in state
           ...action.payload.filter(e => !set.has(e.info.id)),
         ],
       }
