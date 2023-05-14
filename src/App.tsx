@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import './App.scss'
 import Event from './Event'
+import PlayerList, { Player } from './PlayerList'
 
 export interface Performance {
   name: string
@@ -21,26 +22,36 @@ export interface IEvent {
   performances: Performance[]
 }
 
-interface Action {
-  type: 'ADD_PERFORMANCES'
-  payload: IEvent[]
+interface State {
+  events: IEvent[]
+  players: Player[]
 }
 
-const reducer = (state: IEvent[], action: Action) => {
+type Action =
+  | { type: 'ADD_PERFORMANCES'; payload: IEvent[] }
+  | { type: 'ADD_PLAYER'; payload: Player }
+
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_PERFORMANCES':
-      const set = new Set(state.map(s => s.info.id))
-      return [
-        ...state.map(s => {
-          const event = action.payload.find(
-            e =>
-              e.info.id === s.info.id &&
-              !s.performances.some(ss => ss.name === e.performances[0].name),
-          ) ?? { performances: [] }
-          return { ...s, performances: [...s.performances, ...event.performances] }
-        }),
-        ...action.payload.filter(e => !set.has(e.info.id)),
-      ]
+      const set = new Set(state.events.map(s => s.info.id))
+      return {
+        ...state,
+        events: [
+          ...state.events.map(s => {
+            const event = action.payload.find(
+              e =>
+                e.info.id === s.info.id &&
+                !s.performances.some(ss => ss.name === e.performances[0].name),
+            ) ?? { performances: [] }
+            return { ...s, performances: [...s.performances, ...event.performances] }
+          }),
+          ...action.payload.filter(e => !set.has(e.info.id)),
+        ],
+      }
+
+    case 'ADD_PLAYER':
+      return { ...state, players: [...state.players, action.payload] }
 
     default:
       return state
@@ -48,16 +59,16 @@ const reducer = (state: IEvent[], action: Action) => {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, [])
+  const [state, dispatch] = useReducer(reducer, { events: [], players: [] })
   console.log({ state })
 
   useEffect(() => {
     new URLSearchParams(window.location.search)
       .get('players')
       ?.split(',')
-      .forEach(n =>
+      .forEach(id =>
         fetch(
-          `https://cors-anywhere.herokuapp.com/http://www.uschess.org/msa/MbrDtlTnmtHst.php?${n}`,
+          `https://cors-anywhere.herokuapp.com/http://www.uschess.org/msa/MbrDtlTnmtHst.php?${id}`,
         )
           .then(r => r.text())
           .then(t => {
@@ -65,6 +76,10 @@ function App() {
             const doc = parser.parseFromString(t, 'text/html')
             const tables = doc.getElementsByTagName('table')
             const idAndName = tables[3].getElementsByTagName('b')[0].innerText
+
+            const name = toUpperCamelCase(idAndName.split(':')[1].trim())
+
+            dispatch({ type: 'ADD_PLAYER', payload: { name, id } })
 
             const events: IEvent[] = Array.from(tables[6].getElementsByTagName('tr'))
               .slice(2)
@@ -84,7 +99,7 @@ function App() {
                   },
                   performances: [
                     {
-                      name: toUpperCamelCase(idAndName.split(':')[1].trim()),
+                      name,
                       section: getSmallText(eventAndSection.innerHTML),
                       reg: reg.innerHTML,
                       quick: quick.innerHTML,
@@ -101,7 +116,8 @@ function App() {
 
   return (
     <div className='App'>
-      {state
+      <PlayerList players={state.players} />
+      {state.events
         .sort((a, b) => (a.info.date > b.info.date ? -1 : 1))
         .map((event, i) => (
           <Event key={i} event={event} />
