@@ -85,9 +85,7 @@ function App() {
       .get('players')
       ?.split(',')
       .forEach(id =>
-        fetch(
-          `https://cors-anywhere.herokuapp.com/http://www.uschess.org/msa/MbrDtlTnmtHst.php?${id}`,
-        )
+        fetch(`https://danbock.net/uschess-proxy?${id}`)
           .then(r => r.text())
           .then(t => {
             const parser = new DOMParser()
