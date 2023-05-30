@@ -81,10 +81,8 @@ function App() {
   console.log({ state })
 
   useEffect(() => {
-    new URLSearchParams(window.location.search)
-      .get('players')
-      ?.split(',')
-      .forEach(id =>
+    ;[...new Set(new URLSearchParams(window.location.search).get('players')?.split(','))].forEach(
+      id =>
         fetch(`https://danbock.net/uschess-proxy?${id}`)
           .then(r => r.text())
           .then(t => {
@@ -128,7 +126,7 @@ function App() {
 
             dispatch({ type: 'ADD_PERFORMANCES', payload: events })
           }),
-      )
+    )
   }, [])
 
   return (
