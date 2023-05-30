@@ -97,33 +97,34 @@ function App() {
 
             dispatch({ type: 'ADD_PLAYER', payload: { name, id } })
 
-            const events: IEvent[] = Array.from(tables[6].getElementsByTagName('tr'))
-              .slice(2)
-              .map(tr => {
-                const [dateAndId, eventAndSection, reg, quick, blitz] = Array.from(
-                  tr.getElementsByTagName('td'),
-                )
+            const rows = Array.from(tables[6].getElementsByTagName('tr'))
+            const headerRow = rows.findIndex(r => r.innerHTML.includes('Event ID'))
 
-                return {
-                  info: {
-                    date: getUpperRow(dateAndId.innerHTML),
-                    id: getSmallText(dateAndId.innerHTML),
-                    name: eventAndSection.innerHTML.substring(
-                      eventAndSection.innerHTML.indexOf('>') + 1,
-                      eventAndSection.innerHTML.indexOf('<', 1),
-                    ),
+            const events: IEvent[] = rows.slice(headerRow + 1).map(tr => {
+              const [dateAndId, eventAndSection, reg, quick, blitz] = Array.from(
+                tr.getElementsByTagName('td'),
+              )
+
+              return {
+                info: {
+                  date: getUpperRow(dateAndId.innerHTML),
+                  id: getSmallText(dateAndId.innerHTML),
+                  name: eventAndSection.innerHTML.substring(
+                    eventAndSection.innerHTML.indexOf('>') + 1,
+                    eventAndSection.innerHTML.indexOf('<', 1),
+                  ),
+                },
+                performances: [
+                  {
+                    name,
+                    section: getSmallText(eventAndSection.innerHTML),
+                    reg: reg.innerHTML,
+                    quick: quick.innerHTML,
+                    blitz: blitz.innerHTML,
                   },
-                  performances: [
-                    {
-                      name,
-                      section: getSmallText(eventAndSection.innerHTML),
-                      reg: reg.innerHTML,
-                      quick: quick.innerHTML,
-                      blitz: blitz.innerHTML,
-                    },
-                  ],
-                }
-              })
+                ],
+              }
+            })
 
             dispatch({ type: 'ADD_PERFORMANCES', payload: events })
           }),
