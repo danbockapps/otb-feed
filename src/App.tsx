@@ -1,8 +1,9 @@
+import { Typography } from '@mui/material'
 import { useEffect, useReducer } from 'react'
 import './App.scss'
 import Event from './Event'
 import PlayerList, { Player } from './PlayerList'
-import { Typography } from '@mui/material'
+import dedupeEvents from './dedupeEvents'
 
 export interface Performance {
   name: string
@@ -36,6 +37,7 @@ const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_PERFORMANCES':
       const set = new Set(state.events.map(s => s.info.id))
+
       return {
         ...state,
         events: [
@@ -64,7 +66,7 @@ const reducer = (state: State, action: Action): State => {
           }),
 
           // Events that are not yet in state
-          ...action.payload.filter(e => !set.has(e.info.id)),
+          ...dedupeEvents(action.payload.filter(e => !set.has(e.info.id))),
         ],
       }
 
@@ -78,7 +80,6 @@ const reducer = (state: State, action: Action): State => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, { events: [], players: [] })
-  console.log({ state })
 
   useEffect(() => {
     ;[...new Set(new URLSearchParams(window.location.search).get('players')?.split(','))].forEach(
