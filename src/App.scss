@@ -1,6 +1,8 @@
 .App {
   background-color: beige;
   padding-top: 0.5em;
+  display: flex;
+  flex-direction: column;
 
   @media (min-width: 1000px) {
     padding-left: 15em;
@@ -10,5 +12,10 @@
   .title,
   .subhed {
     text-align: center;
+  }
+
+  .add-player-button {
+    margin: 2em;
+    align-self: center;
   }
 }

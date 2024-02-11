@@ -1,8 +1,9 @@
-import { Typography } from '@mui/material'
-import { useEffect, useReducer } from 'react'
+import { Button, Typography } from '@mui/material'
+import { useEffect, useReducer, useState } from 'react'
 import './App.scss'
 import Event from './Event'
 import PlayerList, { Player } from './PlayerList'
+import AddPlayer from './AddPlayer'
 import dedupeEvents from './dedupeEvents'
 import getData from './getData'
 
@@ -81,6 +82,9 @@ const reducer = (state: State, action: Action): State => {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, { events: [], players: [] })
+  const [open, setOpen] = useState(false)
+
+  console.log(state)
 
   useEffect(() => {
     ;[...new Set(new URLSearchParams(window.location.search).get('players')?.split(','))].forEach(
@@ -92,19 +96,41 @@ function App() {
     )
   }, [])
 
+  useEffect(() => {
+    window.history.replaceState(null, '', `?players=${state.players.map(p => p.id).join(',')}`)
+  }, [state.players])
+
   return (
     <div className='App'>
       <Typography className='title' variant='h6'>
         ♟ OTB Feed ♟
       </Typography>
+
       <Typography className='subhed' variant='body2'>
         Edit URL to add/remove players.
         <br />
         Now showing USCF events for:
       </Typography>
+
       <PlayerList players={state.players} />
 
-      {state.events
+      <Button variant='contained' className='add-player-button' onClick={() => setOpen(true)}>
+        Add Player
+      </Button>
+
+      <AddPlayer
+        open={open}
+        onClose={() => setOpen(false)}
+        onAdd={id => {
+          !state.players.some(p => p.id === id) &&
+            getData(id).then(({ name, events }) => {
+              dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
+              dispatch({ type: 'ADD_PERFORMANCES', payload: events })
+            })
+        }}
+      />
+
+      {[...state.events]
         .sort((a, b) => (a.info.date > b.info.date ? -1 : 1))
         .map((event, i) => (
           <Event key={i} event={event} />
