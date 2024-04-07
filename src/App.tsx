@@ -15,13 +15,16 @@ function App() {
   console.log({ state })
 
   useEffect(() => {
-    ;[...new Set(new URLSearchParams(window.location.search).get('players')?.split(','))].forEach(
-      id =>
+    setLoading(true)
+
+    Promise.all(
+      [...new Set(new URLSearchParams(window.location.search).get('players')?.split(','))].map(id =>
         getData(id).then(({ name, events }) => {
           dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
           dispatch({ type: 'ADD_PERFORMANCES', payload: events })
         }),
-    )
+      ),
+    ).finally(() => setLoading(false))
   }, [])
 
   return (
