@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import { FC } from 'react'
+import PerformanceRow from './PerformanceRow'
 import './event.scss'
 import { IEvent } from './reducer'
 
@@ -17,15 +18,16 @@ interface Props {
 }
 
 const Event: FC<Props> = props => {
-  const regExists = props.event.performances.some(p => p.reg !== '&nbsp;')
-  const quickExists = props.event.performances.some(p => p.quick !== '&nbsp;')
-  const blitzExists = props.event.performances.some(p => p.blitz !== '&nbsp;')
+  const regExists = props.event.performances.some(p => p.reg)
+  const quickExists = props.event.performances.some(p => p.quick)
+  const blitzExists = props.event.performances.some(p => p.blitz)
 
   return (
     <Paper className='event'>
       <Typography variant='body2' className='date'>
         {props.event.info.date}
       </Typography>
+
       <Typography variant='h6'>
         {listNames(props.event.performances.map(p => p.name))} played in{' '}
         <Link
@@ -37,6 +39,7 @@ const Event: FC<Props> = props => {
           dangerouslySetInnerHTML={{ __html: props.event.info.name }}
         />
       </Typography>
+
       <Table>
         <TableHead>
           <TableRow>
@@ -46,6 +49,7 @@ const Event: FC<Props> = props => {
             {blitzExists && <TableCell align='center'>Blitz</TableCell>}
           </TableRow>
         </TableHead>
+
         <TableBody>
           {props.event.performances.map((p, i) => (
             <TableRow key={i}>
@@ -54,14 +58,17 @@ const Event: FC<Props> = props => {
                 <br />
                 <Typography variant='caption'>{p.section}</Typography>
               </TableCell>
+
               {regExists && (
-                <TableCell align='center' dangerouslySetInnerHTML={{ __html: p.reg }} />
+                <PerformanceRow performance={p} category='reg' eventId={props.event.info.id} />
               )}
+
               {quickExists && (
-                <TableCell align='center' dangerouslySetInnerHTML={{ __html: p.quick }} />
+                <PerformanceRow performance={p} category='quick' eventId={props.event.info.id} />
               )}
+
               {blitzExists && (
-                <TableCell align='center' dangerouslySetInnerHTML={{ __html: p.blitz }} />
+                <PerformanceRow performance={p} category='blitz' eventId={props.event.info.id} />
               )}
             </TableRow>
           ))}

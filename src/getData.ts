@@ -31,9 +31,9 @@ const getData = (id: string) =>
               id,
               name,
               section: getSmallText(eventAndSection.innerHTML),
-              reg: reg.innerHTML,
-              quick: quick.innerHTML,
-              blitz: blitz.innerHTML,
+              reg: reg.innerText.trim(),
+              quick: quick.innerText.trim(),
+              blitz: blitz.innerText.trim(),
             },
           ],
         }
