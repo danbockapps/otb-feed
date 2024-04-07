@@ -11,12 +11,16 @@ interface Props {
 const PerformanceRow: FC<Props> = props => (
   <TableCell align='center'>
     <Link
-      href={`https://uschess.org/msa/XtblPlr.php?${props.eventId}-00${props.performance.section[0]}-${props.performance.id}`}
+      href={getUscfUrl(props.eventId, props.performance.section, props.performance.id)}
       target='_blank'
     >
       {props.performance[props.category]}
     </Link>
   </TableCell>
 )
+
+// Replace is used to remove non-numeric characters from the eventId
+const getUscfUrl = (eventId: string, section: string, id: string) =>
+  `https://uschess.org/msa/XtblPlr.php?${eventId.replace(/\D/g, '')}-00${section[0]}-${id}`
 
 export default PerformanceRow
