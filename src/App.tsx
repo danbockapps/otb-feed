@@ -96,10 +96,6 @@ function App() {
     )
   }, [])
 
-  useEffect(() => {
-    window.history.replaceState(null, '', `?players=${state.players.map(p => p.id).join(',')}`)
-  }, [state.players])
-
   return (
     <div className='App'>
       <Typography className='title' variant='h6'>
@@ -107,8 +103,6 @@ function App() {
       </Typography>
 
       <Typography className='subhed' variant='body2'>
-        Edit URL to add/remove players.
-        <br />
         Now showing USCF events for:
       </Typography>
 
@@ -122,11 +116,17 @@ function App() {
         open={open}
         onClose={() => setOpen(false)}
         onAdd={id => {
-          !state.players.some(p => p.id === id) &&
+          if (!state.players.some(p => p.id === id)) {
+            window.history.replaceState(
+              null,
+              '',
+              `?players=${state.players.map(p => p.id).join(',')},${id}`,
+            )
             getData(id).then(({ name, events }) => {
               dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
               dispatch({ type: 'ADD_PERFORMANCES', payload: events })
             })
+          }
         }}
       />
 
