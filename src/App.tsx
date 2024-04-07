@@ -1,4 +1,4 @@
-import { Button, Typography } from '@mui/material'
+import { Button, CircularProgress, Typography } from '@mui/material'
 import { useEffect, useReducer, useState } from 'react'
 import AddPlayer from './AddPlayer'
 import './App.scss'
@@ -10,6 +10,7 @@ import { reducer } from './reducer'
 function App() {
   const [state, dispatch] = useReducer(reducer, { events: [], players: [] })
   const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   console.log({ state })
 
@@ -48,9 +49,15 @@ function App() {
         }}
       />
 
-      <Button variant='contained' className='add-player-button' onClick={() => setOpen(true)}>
-        Add Player
-      </Button>
+      <div className='add-player-button-container'>
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <Button variant='contained' onClick={() => setOpen(true)}>
+            Add Player
+          </Button>
+        )}
+      </div>
 
       <AddPlayer
         open={open}
@@ -62,10 +69,15 @@ function App() {
               '',
               `?players=${state.players.map(p => p.id).join(',')},${id}`,
             )
-            getData(id).then(({ name, events }) => {
-              dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
-              dispatch({ type: 'ADD_PERFORMANCES', payload: events })
-            })
+
+            setLoading(true)
+
+            getData(id)
+              .then(({ name, events }) => {
+                dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
+                dispatch({ type: 'ADD_PERFORMANCES', payload: events })
+              })
+              .finally(() => setLoading(false))
           }
         }}
       />

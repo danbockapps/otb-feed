@@ -14,8 +14,10 @@
     text-align: center;
   }
 
-  .add-player-button {
-    margin: 2em;
+  .add-player-button-container {
     align-self: center;
+    height: 7em;
+    display: flex;
+    align-items: center;
   }
 }

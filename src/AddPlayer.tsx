@@ -27,6 +27,7 @@ const AddPlayer: FC<Props> = props => {
           onClick={() => {
             props.onAdd(id)
             props.onClose()
+            setId('')
           }}
         >
           Add
