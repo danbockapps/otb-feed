@@ -15,16 +15,22 @@ function App() {
   console.log({ state })
 
   useEffect(() => {
-    setLoading(true)
+    const urlPlayerIds = new URLSearchParams(window.location.search).get('players')?.split(',')
 
-    Promise.all(
-      [...new Set(new URLSearchParams(window.location.search).get('players')?.split(','))].map(id =>
-        getData(id).then(({ name, events }) => {
-          dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
-          dispatch({ type: 'ADD_PERFORMANCES', payload: events })
-        }),
-      ),
-    ).finally(() => setLoading(false))
+    if (!urlPlayerIds?.length) {
+      document.location.href = '?players=12892910,16754590,12900032,14821464'
+    } else {
+      setLoading(true)
+
+      Promise.all(
+        [...new Set(urlPlayerIds)].map(id =>
+          getData(id).then(({ name, events }) => {
+            dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
+            dispatch({ type: 'ADD_PERFORMANCES', payload: events })
+          }),
+        ),
+      ).finally(() => setLoading(false))
+    }
   }, [])
 
   return (
