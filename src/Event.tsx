@@ -28,7 +28,7 @@ const Event: FC<Props> = props => {
         {props.event.info.date}
       </Typography>
 
-      <Typography variant='h6'>
+      <Typography variant='h6' className='played-in'>
         {listNames(props.event.performances.map(p => p.name))} played in{' '}
         <Link
           underline='hover'
