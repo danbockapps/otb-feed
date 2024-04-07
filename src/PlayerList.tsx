@@ -9,13 +9,20 @@ export interface Player {
 
 interface Props {
   players: Player[]
+  onDelete: (id: string) => void
 }
 
 const PlayerList: FC<Props> = props => {
   return (
     <div className='player-list'>
       {props.players.map((p, i) => (
-        <Chip className='player-chip' size='small' label={`${p.id} ${p.name}`} key={i} />
+        <Chip
+          className='player-chip'
+          size='small'
+          label={`${p.id} ${p.name}`}
+          key={i}
+          onDelete={() => props.onDelete(p.id)}
+        />
       ))}
     </div>
   )

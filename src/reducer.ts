@@ -2,6 +2,7 @@ import { Player } from './PlayerList'
 import dedupeEvents from './dedupeEvents'
 
 export interface Performance {
+  id: string
   name: string
   section: string
   reg: string
@@ -28,6 +29,7 @@ interface State {
 type Action =
   | { type: 'ADD_PERFORMANCES'; payload: IEvent[] }
   | { type: 'ADD_PLAYER'; payload: Player }
+  | { type: 'REMOVE_PLAYER'; payload: string }
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -68,6 +70,18 @@ export const reducer = (state: State, action: Action): State => {
 
     case 'ADD_PLAYER':
       return { ...state, players: [...state.players, action.payload] }
+
+    case 'REMOVE_PLAYER':
+      return {
+        ...state,
+        players: state.players.filter(p => p.id !== action.payload),
+        events: state.events
+          .map(e => ({
+            ...e,
+            performances: e.performances.filter(p => p.id !== action.payload),
+          }))
+          .filter(e => e.performances.length > 0),
+      }
 
     default:
       return state

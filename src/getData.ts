@@ -28,6 +28,7 @@ const getData = (id: string) =>
           },
           performances: [
             {
+              id,
               name,
               section: getSmallText(eventAndSection.innerHTML),
               reg: reg.innerHTML,

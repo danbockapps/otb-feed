@@ -11,7 +11,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, { events: [], players: [] })
   const [open, setOpen] = useState(false)
 
-  console.log(state)
+  console.log({ state })
 
   useEffect(() => {
     ;[...new Set(new URLSearchParams(window.location.search).get('players')?.split(','))].forEach(
@@ -33,7 +33,20 @@ function App() {
         Now showing USCF events for:
       </Typography>
 
-      <PlayerList players={state.players} />
+      <PlayerList
+        players={state.players}
+        onDelete={id => {
+          dispatch({ type: 'REMOVE_PLAYER', payload: id })
+          window.history.replaceState(
+            null,
+            '',
+            `?players=${state.players
+              .filter(p => p.id !== id)
+              .map(p => p.id)
+              .join(',')}`,
+          )
+        }}
+      />
 
       <Button variant='contained' className='add-player-button' onClick={() => setOpen(true)}>
         Add Player
