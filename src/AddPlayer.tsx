@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogTitle, TextField } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogTitle, TextField, Typography } from '@mui/material'
 import { FC, useState } from 'react'
 import './add-player.scss'
 
@@ -20,6 +20,10 @@ const AddPlayer: FC<Props> = props => {
         value={id}
         onChange={e => setId(e.target.value)}
       />
+
+      <Typography variant='body2'>
+        After adding players, bookmark this page in your browser to save your current player list.
+      </Typography>
 
       <DialogActions>
         <Button

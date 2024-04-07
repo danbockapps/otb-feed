@@ -40,6 +40,10 @@ function App() {
       </Typography>
 
       <Typography className='subhed' variant='body2'>
+        Bookmark current URL to save!
+      </Typography>
+
+      <Typography className='subhed' variant='body2'>
         Now showing USCF events for:
       </Typography>
 
