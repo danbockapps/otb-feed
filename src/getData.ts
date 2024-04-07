@@ -1,4 +1,4 @@
-import { IEvent } from './App'
+import { IEvent } from './reducer'
 
 const getData = (id: string) =>
   fetch(`https://danbock.net/uschess-proxy?${id}`)

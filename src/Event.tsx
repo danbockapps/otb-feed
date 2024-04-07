@@ -9,8 +9,8 @@ import {
   Typography,
 } from '@mui/material'
 import { FC } from 'react'
-import { IEvent } from './App'
 import './event.scss'
+import { IEvent } from './reducer'
 
 interface Props {
   event: IEvent

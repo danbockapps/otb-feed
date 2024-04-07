@@ -1,4 +1,4 @@
-import { IEvent } from './App'
+import { IEvent } from './reducer'
 
 const dedupeEvents = (events: IEvent[]) =>
   events.reduce((acc, cur) => {
