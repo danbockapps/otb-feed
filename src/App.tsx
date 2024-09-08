@@ -18,12 +18,14 @@ function App() {
     const urlPlayerIds = new URLSearchParams(window.location.search).get('players')?.split(',')
 
     if (!urlPlayerIds?.length) {
-      document.location.href = '?players=12892910,16754590,12900032,14821464,12939342'
+      document.location.href = `?players=${localStorage.getItem('players') ?? '12892910,16754590,12900032,14821464,12939342'}`
     } else {
       setLoading(true)
+      const uniqueIds = [...new Set(urlPlayerIds)]
+      localStorage.setItem('players', uniqueIds.join(','))
 
       Promise.all(
-        [...new Set(urlPlayerIds)].map((id) =>
+        uniqueIds.map((id) =>
           getData(id).then(({ name, events }) => {
             dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
             dispatch({ type: 'ADD_PERFORMANCES', payload: events })
@@ -40,10 +42,6 @@ function App() {
       </Typography>
 
       <Typography className="subhed" variant="body2">
-        Bookmark current URL to save!
-      </Typography>
-
-      <Typography className="subhed" variant="body2">
         Now showing USCF events for:
       </Typography>
 
@@ -51,14 +49,14 @@ function App() {
         players={state.players}
         onDelete={(id) => {
           dispatch({ type: 'REMOVE_PLAYER', payload: id })
-          window.history.replaceState(
-            null,
-            '',
-            `?players=${state.players
-              .filter((p) => p.id !== id)
-              .map((p) => p.id)
-              .join(',')}`,
-          )
+
+          const newPlayers = state.players
+            .filter((p) => p.id !== id)
+            .map((p) => p.id)
+            .join(',')
+
+          localStorage.setItem('players', newPlayers)
+          window.history.replaceState(null, '', `?players=${newPlayers}`)
         }}
       />
 
@@ -77,11 +75,9 @@ function App() {
         onClose={() => setOpen(false)}
         onAdd={(id) => {
           if (!state.players.some((p) => p.id === id)) {
-            window.history.replaceState(
-              null,
-              '',
-              `?players=${state.players.map((p) => p.id).join(',')},${id}`,
-            )
+            const newPlayers = [...state.players.map((p) => p.id), id].join(',')
+            localStorage.setItem('players', newPlayers)
+            window.history.replaceState(null, '', `?players=${newPlayers}`)
 
             setLoading(true)
 
