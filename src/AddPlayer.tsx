@@ -21,10 +21,6 @@ const AddPlayer: FC<Props> = (props) => {
         onChange={(e) => setId(e.target.value)}
       />
 
-      <Typography variant="body2">
-        After adding players, bookmark this page in your browser to save your current player list.
-      </Typography>
-
       <DialogActions>
         <Button
           variant="contained"
