@@ -18,12 +18,12 @@ function App() {
     const urlPlayerIds = new URLSearchParams(window.location.search).get('players')?.split(',')
 
     if (!urlPlayerIds?.length) {
-      document.location.href = '?players=12892910,16754590,12900032,14821464'
+      document.location.href = '?players=12892910,16754590,12900032,14821464,12939342'
     } else {
       setLoading(true)
 
       Promise.all(
-        [...new Set(urlPlayerIds)].map(id =>
+        [...new Set(urlPlayerIds)].map((id) =>
           getData(id).then(({ name, events }) => {
             dispatch({ type: 'ADD_PLAYER', payload: { id, name } })
             dispatch({ type: 'ADD_PERFORMANCES', payload: events })
@@ -34,39 +34,39 @@ function App() {
   }, [])
 
   return (
-    <div className='App'>
-      <Typography className='title' variant='h6'>
+    <div className="App">
+      <Typography className="title" variant="h6">
         ♟ OTB Feed ♟
       </Typography>
 
-      <Typography className='subhed' variant='body2'>
+      <Typography className="subhed" variant="body2">
         Bookmark current URL to save!
       </Typography>
 
-      <Typography className='subhed' variant='body2'>
+      <Typography className="subhed" variant="body2">
         Now showing USCF events for:
       </Typography>
 
       <PlayerList
         players={state.players}
-        onDelete={id => {
+        onDelete={(id) => {
           dispatch({ type: 'REMOVE_PLAYER', payload: id })
           window.history.replaceState(
             null,
             '',
             `?players=${state.players
-              .filter(p => p.id !== id)
-              .map(p => p.id)
+              .filter((p) => p.id !== id)
+              .map((p) => p.id)
               .join(',')}`,
           )
         }}
       />
 
-      <div className='add-player-button-container'>
+      <div className="add-player-button-container">
         {loading ? (
           <CircularProgress />
         ) : (
-          <Button variant='contained' onClick={() => setOpen(true)}>
+          <Button variant="contained" onClick={() => setOpen(true)}>
             Add Player
           </Button>
         )}
@@ -75,12 +75,12 @@ function App() {
       <AddPlayer
         open={open}
         onClose={() => setOpen(false)}
-        onAdd={id => {
-          if (!state.players.some(p => p.id === id)) {
+        onAdd={(id) => {
+          if (!state.players.some((p) => p.id === id)) {
             window.history.replaceState(
               null,
               '',
-              `?players=${state.players.map(p => p.id).join(',')},${id}`,
+              `?players=${state.players.map((p) => p.id).join(',')},${id}`,
             )
 
             setLoading(true)

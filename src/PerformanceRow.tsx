@@ -8,11 +8,11 @@ interface Props {
   eventId: string
 }
 
-const PerformanceRow: FC<Props> = props => (
-  <TableCell align='center'>
+const PerformanceRow: FC<Props> = (props) => (
+  <TableCell align="center">
     <Link
       href={getUscfUrl(props.eventId, props.performance.section, props.performance.id)}
-      target='_blank'
+      target="_blank"
     >
       {props.performance[props.category]}
     </Link>

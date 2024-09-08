@@ -34,37 +34,37 @@ type Action =
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_PERFORMANCES':
-      const set = new Set(state.events.map(s => s.info.id))
+      const set = new Set(state.events.map((s) => s.info.id))
 
       return {
         ...state,
         events: [
-          ...state.events.map(s => {
+          ...state.events.map((s) => {
             const events = action.payload.filter(
-              e =>
+              (e) =>
                 e.info.id === s.info.id &&
                 !s.performances.some(
-                  ss =>
+                  (ss) =>
                     ss.name === e.performances[0].name && ss.section === e.performances[0].section,
                 ),
             )
             return {
               ...s,
-              performances: [...s.performances, ...events.flatMap(e => e.performances)].sort(
+              performances: [...s.performances, ...events.flatMap((e) => e.performances)].sort(
                 (a, b) =>
                   a.section === b.section
                     ? a.name > b.name
                       ? 1
                       : -1
                     : a.section > b.section
-                    ? 1
-                    : -1,
+                      ? 1
+                      : -1,
               ),
             }
           }),
 
           // Events that are not yet in state
-          ...dedupeEvents(action.payload.filter(e => !set.has(e.info.id))),
+          ...dedupeEvents(action.payload.filter((e) => !set.has(e.info.id))),
         ],
       }
 
@@ -74,13 +74,13 @@ export const reducer = (state: State, action: Action): State => {
     case 'REMOVE_PLAYER':
       return {
         ...state,
-        players: state.players.filter(p => p.id !== action.payload),
+        players: state.players.filter((p) => p.id !== action.payload),
         events: state.events
-          .map(e => ({
+          .map((e) => ({
             ...e,
-            performances: e.performances.filter(p => p.id !== action.payload),
+            performances: e.performances.filter((p) => p.id !== action.payload),
           }))
-          .filter(e => e.performances.length > 0),
+          .filter((e) => e.performances.length > 0),
       }
 
     default:
