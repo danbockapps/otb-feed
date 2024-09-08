@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogTitle, TextField, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogTitle, TextField } from '@mui/material'
 import { FC, useState } from 'react'
 import './add-player.scss'
 
