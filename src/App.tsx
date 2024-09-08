@@ -38,7 +38,7 @@ function App() {
 
   const getProgressPct = () => {
     const urlPlayerIds = getUrlPlayers()
-    return urlPlayerIds?.length ? state.players.length / urlPlayerIds.length : 0
+    return urlPlayerIds?.length ? 100 * (state.players.length / urlPlayerIds.length) : 0
   }
 
   return (
