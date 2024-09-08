@@ -1,10 +1,11 @@
-import { Button, CircularProgress, Typography } from '@mui/material'
+import { Button, LinearProgress, Typography } from '@mui/material'
 import { useEffect, useReducer, useState } from 'react'
 import AddPlayer from './AddPlayer'
 import './App.scss'
 import Event from './Event'
 import PlayerList from './PlayerList'
 import getData from './getData'
+import getUrlPlayers from './getUrlPlayers'
 import { reducer } from './reducer'
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
   console.log({ state })
 
   useEffect(() => {
-    const urlPlayerIds = new URLSearchParams(window.location.search).get('players')?.split(',')
+    const urlPlayerIds = getUrlPlayers()
 
     if (!urlPlayerIds?.length) {
       document.location.href = `?players=${localStorage.getItem('players') ?? '12892910,16754590,12900032,14821464,12939342'}`
@@ -34,6 +35,11 @@ function App() {
       ).finally(() => setLoading(false))
     }
   }, [])
+
+  const getProgressPct = () => {
+    const urlPlayerIds = getUrlPlayers()
+    return urlPlayerIds?.length ? state.players.length / urlPlayerIds.length : 0
+  }
 
   return (
     <div className="App">
@@ -60,9 +66,9 @@ function App() {
         }}
       />
 
-      <div className="add-player-button-container">
+      <div className={`progress-container ${loading ? '' : ' add-player-button-container'}`}>
         {loading ? (
-          <CircularProgress />
+          <LinearProgress variant="determinate" value={getProgressPct()} />
         ) : (
           <Button variant="contained" onClick={() => setOpen(true)}>
             Add Player

@@ -14,10 +14,17 @@
     text-align: center;
   }
 
-  .add-player-button-container {
-    align-self: center;
+  .progress-container {
     height: 7em;
     display: flex;
     align-items: center;
+
+    .MuiLinearProgress-root {
+      flex: 1;
+    }
+  }
+
+  .add-player-button-container {
+    align-self: center;
   }
 }
